@@ -1,3 +1,19 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
+  background: #0d1017;
+  color: #fff;
   margin: 0;
+  font-family: var(--font-geist-sans), sans-serif;
+}
+
+.authPage {
+  min-height: 100vh;
+  background: #0d1017;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
 }

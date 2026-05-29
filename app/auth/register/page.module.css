@@ -1,0 +1,50 @@
+.page {
+  min-height: 100vh;
+  background: #0d1017;
+  display: flex;
+}
+
+.left {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex: 1;
+  background: #0a0d13;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 40px;
+}
+
+.bigLogo {
+  fill: #3b82f6;
+  width: 120px;
+  height: 120px;
+}
+
+.brand {
+  margin: 0;
+  color: #fff;
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.tagline {
+  margin: 0;
+  color: #6b7280;
+  font-size: 1rem;
+}
+
+.right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+@media (min-width: 768px) {
+  .left {
+    display: flex;
+  }
+}

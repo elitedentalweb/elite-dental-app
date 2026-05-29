@@ -11,7 +11,7 @@ export async function register(body: RegisterParams) {
   return result.data;
 }
 
-export async function login(body: LoginParams) {
+export async function login(body: LoginParams & { rememberMe?: boolean }) {
   const result = await nextApi.post('/auth/login', body);
   return result.data;
 }
