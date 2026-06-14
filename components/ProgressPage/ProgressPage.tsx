@@ -104,9 +104,13 @@ const ProgressPage = ({ id }: Props) => {
             type="number"
             min={0}
             max={100}
-            value={value}
+            value={value === 0 ? '' : value}
+            placeholder="0"
             onChange={(e) => {
-              const v = Math.min(100, Math.max(0, Number(e.target.value)));
+              const v =
+                e.target.value === ''
+                  ? 0
+                  : Math.min(100, Math.max(0, Number(e.target.value)));
               setValue(v);
             }}
           />
