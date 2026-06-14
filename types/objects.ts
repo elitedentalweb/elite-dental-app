@@ -15,6 +15,7 @@ export interface UpdateObjectParams {
   client?: string;
   location?: string;
   description?: string;
+  manualProgress?: number;
   startDate?: Date | string;
   endDate?: Date | string;
   status?: 'active' | 'completed';

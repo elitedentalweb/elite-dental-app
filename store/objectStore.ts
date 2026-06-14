@@ -5,6 +5,7 @@ import {
   createObject,
   updateObject,
   deleteObject,
+  updateManualProgress,
 } from '@/services/objects';
 import { CreateObjectParams, UpdateObjectParams } from '@/types/objects';
 
@@ -19,6 +20,7 @@ export interface ObjectType {
   status: 'active' | 'completed';
   photosBefore: string[];
   photosAfter: string[];
+  manualProgress: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -33,6 +35,7 @@ type ObjectStore = {
   createObject: (object: CreateObjectParams) => Promise<void>;
   updateObject: (id: string, object: UpdateObjectParams) => Promise<void>;
   deleteObject: (id: string) => Promise<void>;
+  updateManualProgress: (id: string, manualProgress: number) => Promise<void>;
 };
 
 export const useObjectStore = create<ObjectStore>((set, get) => ({
@@ -100,6 +103,15 @@ export const useObjectStore = create<ObjectStore>((set, get) => ({
       console.log(error);
     } finally {
       set({ isLoading: false });
+    }
+  },
+
+  updateManualProgress: async (id, manualProgress) => {
+    try {
+      const updated = await updateManualProgress(id, manualProgress);
+      set({ currentObject: updated });
+    } catch (error) {
+      console.log(error);
     }
   },
 }));

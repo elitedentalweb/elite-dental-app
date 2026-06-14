@@ -25,3 +25,10 @@ export async function deleteObject(id: string) {
   const result = await nextApi.delete(`/objects/${id}`);
   return result.data;
 }
+
+export async function updateManualProgress(id: string, manualProgress: number) {
+  const result = await nextApi.patch(`/objects/${id}/progress`, {
+    manualProgress,
+  });
+  return result.data;
+}

@@ -35,8 +35,9 @@ const ObjectPage = ({ id }: Props) => {
 
   if (!currentObject) return <p className={css['loading']}>Loading...</p>;
 
-  const progress = progressMap[id] ?? 0;
-
+  const autoProgress = progressMap[id] ?? 0;
+  const manualProgress = currentObject.manualProgress ?? 0;
+  const progress = Math.max(autoProgress, manualProgress);
   return (
     <div className={css['page']}>
       <button className={css['back']} onClick={() => router.back()}>
@@ -114,6 +115,14 @@ const ObjectPage = ({ id }: Props) => {
             style={{ width: `${progress}%` }}
           />
         </div>
+        {isAdmin && (
+          <Link
+            href={`/objects/${id}/progress`}
+            className={css['progressLink']}
+          >
+            Set manual progress →
+          </Link>
+        )}
       </div>
 
       <div className={css['section']}>

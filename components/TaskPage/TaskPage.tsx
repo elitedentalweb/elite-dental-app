@@ -1,5 +1,5 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useTaskStore } from '@/store/taskStore';
 import { useAuthStore } from '@/store/auth';
 import { useRouter } from 'next/navigation';
@@ -14,8 +14,9 @@ type Props = {
 
 const TaskPage = ({ taskId, objectId }: Props) => {
   const router = useRouter();
-  const { currentTask, fetchTaskById, updateTask } = useTaskStore();
+  const { currentTask, fetchTaskById, updateTask, deleteTask } = useTaskStore();
   const { user } = useAuthStore();
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const isAdmin = user?.role === 'admin';
   const isWorker = user?.role === 'worker';
@@ -37,6 +38,11 @@ const TaskPage = ({ taskId, objectId }: Props) => {
     await updateTask(taskId, { current: currentTask.current + 1 });
   };
 
+  const handleDelete = async () => {
+    await deleteTask(taskId);
+    router.push(`/objects/${objectId}`);
+  };
+
   return (
     <div className={css['page']}>
       <button className={css['back']} onClick={() => router.back()}>
@@ -46,12 +52,20 @@ const TaskPage = ({ taskId, objectId }: Props) => {
       <div className={css['header']}>
         <h1 className={css['title']}>{currentTask.title}</h1>
         {isAdmin && (
-          <Link
-            href={`/objects/${objectId}/tasks/${taskId}/edit`}
-            className={css['editButton']}
-          >
-            ✏️ Edit
-          </Link>
+          <div className={css['actions']}>
+            <Link
+              href={`/objects/${objectId}/tasks/${taskId}/edit`}
+              className={css['editButton']}
+            >
+              ✏️ Edit
+            </Link>
+            <button
+              className={css['deleteButton']}
+              onClick={() => setShowConfirm(true)}
+            >
+              🗑 Delete
+            </button>
+          </div>
         )}
       </div>
 
@@ -95,6 +109,27 @@ const TaskPage = ({ taskId, objectId }: Props) => {
         </div>
         <p className={css['progressPercent']}>{currentTask.progress}%</p>
       </div>
+
+      {showConfirm && (
+        <div className={css['overlay']}>
+          <div className={css['modal']}>
+            <p className={css['modalText']}>
+              Are you sure you want to delete this task?
+            </p>
+            <div className={css['modalButtons']}>
+              <button
+                className={css['cancelButton']}
+                onClick={() => setShowConfirm(false)}
+              >
+                Cancel
+              </button>
+              <button className={css['confirmButton']} onClick={handleDelete}>
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

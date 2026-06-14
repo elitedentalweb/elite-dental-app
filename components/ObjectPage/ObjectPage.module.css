@@ -203,6 +203,18 @@
   gap: 12px;
 }
 
+.progressLink {
+  color: #3b82f6;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  align-self: flex-end;
+}
+
+.progressLink:hover {
+  text-decoration: underline;
+}
+
 .sectionTitle {
   margin: 0;
   font-size: 0.9rem;
@@ -226,8 +238,11 @@
 .description {
   margin: 0;
   color: #9ca3af;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .taskList {

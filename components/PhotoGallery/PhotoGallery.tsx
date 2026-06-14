@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import css from './PhotoGallery.module.css';
 
 type Props = {
@@ -7,9 +8,21 @@ type Props = {
 };
 
 const PhotoGallery = ({ photos }: Props) => {
-  const [preview, setPreview] = useState<string | null>(null);
+  const [previewIndex, setPreviewIndex] = useState<number | null>(null);
 
   if (photos.length === 0) return <p className={css['empty']}>No photos yet</p>;
+
+  const handlePrev = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (previewIndex === null) return;
+    setPreviewIndex(previewIndex === 0 ? photos.length - 1 : previewIndex - 1);
+  };
+
+  const handleNext = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (previewIndex === null) return;
+    setPreviewIndex(previewIndex === photos.length - 1 ? 0 : previewIndex + 1);
+  };
 
   return (
     <div>
@@ -20,13 +33,34 @@ const PhotoGallery = ({ photos }: Props) => {
             src={url}
             alt={`photo-${i}`}
             className={css['photo']}
-            onClick={() => setPreview(url)}
+            onClick={() => setPreviewIndex(i)}
           />
         ))}
       </div>
-      {preview && (
-        <div className={css['overlay']} onClick={() => setPreview(null)}>
-          <img src={preview} alt="preview" className={css['previewImg']} />
+
+      {previewIndex !== null && (
+        <div className={css['overlay']} onClick={() => setPreviewIndex(null)}>
+          <button className={css['navBtn']} onClick={handlePrev}>
+            <ChevronLeft size={28} />
+          </button>
+          <img
+            src={photos[previewIndex]}
+            alt="preview"
+            className={css['previewImg']}
+            onClick={(e) => e.stopPropagation()}
+          />
+          <button className={css['navBtn']} onClick={handleNext}>
+            <ChevronRight size={28} />
+          </button>
+          <button
+            className={css['closeBtn']}
+            onClick={() => setPreviewIndex(null)}
+          >
+            <X size={20} />
+          </button>
+          <span className={css['counter']}>
+            {previewIndex + 1} / {photos.length}
+          </span>
         </div>
       )}
     </div>
