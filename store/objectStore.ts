@@ -18,13 +18,13 @@ export interface ObjectType {
   startDate: string;
   endDate: string;
   status: 'active' | 'completed';
+  priority: 'in_progress' | 'priority' | 'on_hold';
   photosBefore: string[];
   photosAfter: string[];
   manualProgress: number;
   createdAt: string;
   updatedAt: string;
 }
-
 type ObjectStore = {
   objects: ObjectType[];
   currentObject: ObjectType | null;

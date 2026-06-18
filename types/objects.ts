@@ -8,6 +8,7 @@ export interface CreateObjectParams {
   status?: 'active' | 'completed';
   photosBefore?: string[];
   photosAfter?: string[];
+  priority?: 'in_progress' | 'priority' | 'on_hold';
 }
 
 export interface UpdateObjectParams {
@@ -21,4 +22,5 @@ export interface UpdateObjectParams {
   status?: 'active' | 'completed';
   photosBefore?: string[];
   photosAfter?: string[];
+  priority?: 'in_progress' | 'priority' | 'on_hold';
 }

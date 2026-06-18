@@ -20,6 +20,9 @@ const ObjectAdminPage = () => {
   const [endDate, setEndDate] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [priority, setPriority] = useState<
+    'in_progress' | 'priority' | 'on_hold'
+  >('in_progress');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,6 +41,7 @@ const ObjectAdminPage = () => {
         startDate,
         endDate,
         photosBefore,
+        priority,
       });
 
       router.push('/');
@@ -53,10 +57,10 @@ const ObjectAdminPage = () => {
       <button className={css['back']} onClick={() => router.back()}>
         ← Back
       </button>
-      <h1 className={css['title']}>Add Object</h1>
+      <h1 className={css['title']}>Add Projects</h1>
       <form className={css['form']} onSubmit={handleSubmit}>
         <div className={css['field']}>
-          <label className={css['label']}>Object name *</label>
+          <label className={css['label']}>Project name *</label>
           <input
             className={css['input']}
             type="text"
@@ -111,6 +115,23 @@ const ObjectAdminPage = () => {
         </div>
 
         <div className={css['field']}>
+          <label className={css['label']}>Priority</label>
+          <select
+            className={css['input']}
+            value={priority}
+            onChange={(e) =>
+              setPriority(
+                e.target.value as 'in_progress' | 'priority' | 'on_hold'
+              )
+            }
+          >
+            <option value="in_progress">🔵 In Progress</option>
+            <option value="priority">🔴 Priority</option>
+            <option value="on_hold">⚫ On Hold</option>
+          </select>
+        </div>
+
+        <div className={css['field']}>
           <label className={css['label']}>Photos</label>
           <PhotoUpload photos={photosBefore} onChange={setPhotosBefore} />
         </div>
@@ -119,7 +140,7 @@ const ObjectAdminPage = () => {
           <label className={css['label']}>Description</label>
           <textarea
             className={css['textarea']}
-            placeholder="Describe the object..."
+            placeholder="Describe the project..."
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={4}
@@ -131,7 +152,7 @@ const ObjectAdminPage = () => {
           type="submit"
           disabled={loading}
         >
-          {loading ? 'Creating...' : 'Create Object'}
+          {loading ? 'Creating...' : 'Create Project'}
         </button>
       </form>
     </div>

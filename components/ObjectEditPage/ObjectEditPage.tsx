@@ -22,6 +22,9 @@ const ObjectEditPage = ({ id }: Props) => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [status, setStatus] = useState<'active' | 'completed'>('active');
+  const [priority, setPriority] = useState<
+    'in_progress' | 'priority' | 'on_hold'
+  >('in_progress');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -38,6 +41,7 @@ const ObjectEditPage = ({ id }: Props) => {
       setLocation(currentObject.location);
       setDescription(currentObject.description || '');
       setStatus(currentObject.status);
+      setPriority(currentObject.priority ?? 'in_progress');
       setPhotosBefore(currentObject.photosBefore || []);
       setStartDate(
         new Date(currentObject.startDate).toISOString().split('T')[0]
@@ -45,6 +49,7 @@ const ObjectEditPage = ({ id }: Props) => {
       setEndDate(new Date(currentObject.endDate).toISOString().split('T')[0]);
     });
   }, [currentObject]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -62,9 +67,9 @@ const ObjectEditPage = ({ id }: Props) => {
         startDate,
         endDate,
         status,
+        priority,
         photosBefore,
       });
-
       router.push(`/objects/${id}`);
     } catch {
       setError('Failed to update object');
@@ -80,10 +85,10 @@ const ObjectEditPage = ({ id }: Props) => {
       <button className={css['back']} onClick={() => router.back()}>
         ← Back
       </button>
-      <h1 className={css['title']}>Edit Object</h1>
+      <h1 className={css['title']}>Edit Projects</h1>
       <form className={css['form']} onSubmit={handleSubmit}>
         <div className={css['field']}>
-          <label className={css['label']}>Object name *</label>
+          <label className={css['label']}>Project name *</label>
           <input
             className={css['input']}
             type="text"
@@ -146,12 +151,26 @@ const ObjectEditPage = ({ id }: Props) => {
             <option value="completed">Completed</option>
           </select>
         </div>
-
+        <div className={css['field']}>
+          <label className={css['label']}>Priority</label>
+          <select
+            className={css['input']}
+            value={priority}
+            onChange={(e) =>
+              setPriority(
+                e.target.value as 'in_progress' | 'priority' | 'on_hold'
+              )
+            }
+          >
+            <option value="in_progress">🔵 In Progress</option>
+            <option value="priority">🔴 Priority</option>
+            <option value="on_hold">⚫ On Hold</option>
+          </select>
+        </div>
         <div className={css['field']}>
           <label className={css['label']}>Photos</label>
           <PhotoUpload photos={photosBefore} onChange={setPhotosBefore} />
         </div>
-
         <div className={css['field']}>
           <label className={css['label']}>Description</label>
           <textarea

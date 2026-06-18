@@ -4,7 +4,12 @@ import { useAuthStore } from '@/store/auth';
 import { useRouter, usePathname } from 'next/navigation';
 import PendingPage from '../PendingPage/PendingPage';
 
-const publicRoutes = ['/auth/login', '/auth/register'];
+const publicRoutes = [
+  '/auth/login',
+  '/auth/register',
+  '/auth/reset-password',
+  '/auth/forgot-password',
+];
 
 const AuthGuard = ({ children }: { children: React.ReactNode }) => {
   const { user, isAuth, isLoading, checkAuth } = useAuthStore();

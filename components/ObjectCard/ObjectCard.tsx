@@ -8,9 +8,19 @@ type Props = {
   progress: number;
 };
 
+const priorityConfig = {
+  in_progress: { color: '#3b82f6', label: '● In Progress' },
+  priority: { color: '#ef4444', label: '● Priority' },
+  on_hold: { color: '#6b7280', label: '● On Hold' },
+};
+
 const ObjectCard = ({ object, progress }: Props) => {
   const isCompleted = object.status === 'completed';
-  const barColor = isCompleted ? '#22c55e' : '#3b82f6';
+  const priority = object.priority ?? 'in_progress';
+  const config = priorityConfig[priority];
+  const barColor = isCompleted ? '#22c55e' : config.color;
+  const statusColor = isCompleted ? '#22c55e' : config.color;
+  const statusLabel = isCompleted ? '● Completed' : config.label;
 
   return (
     <Link href={`/objects/${object._id}`} className={css['objectCard']}>
@@ -22,11 +32,8 @@ const ObjectCard = ({ object, progress }: Props) => {
         </div>
         <div className={css['right']}>
           <p className={css['percent']}>{progress}%</p>
-          <p
-            className={css['status']}
-            style={{ color: isCompleted ? '#22c55e' : '#3b82f6' }}
-          >
-            {isCompleted ? '● Completed' : '● In progress'}
+          <p className={css['status']} style={{ color: statusColor }}>
+            {statusLabel}
           </p>
         </div>
       </div>

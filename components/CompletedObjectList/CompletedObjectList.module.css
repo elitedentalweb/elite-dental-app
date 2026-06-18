@@ -1,0 +1,33 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px 16px 40px;
+  max-width: 640px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.back {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  width: fit-content;
+}
+
+.title {
+  margin: 0;
+  color: #fff;
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+
+.empty {
+  margin: 0;
+  color: #4b5563;
+  font-size: 0.9rem;
+}

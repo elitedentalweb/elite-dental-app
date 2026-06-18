@@ -71,6 +71,9 @@ const LoginForm = () => {
             />
             Remember me
           </label>
+          <Link href="/auth/forgot-password" className={css['forgotLink']}>
+            Forgot password?
+          </Link>
         </div>
         {error && <p className={css['error']}>{error}</p>}
         <button type="submit" disabled={loading}>
