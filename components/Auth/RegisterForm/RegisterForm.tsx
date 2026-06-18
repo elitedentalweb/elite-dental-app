@@ -1,5 +1,5 @@
 'use client';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { register } from '@/services/auth';
 import Link from 'next/link';
@@ -13,6 +13,8 @@ const RegisterForm = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const inviteToken = searchParams.get('invite');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,6 +30,7 @@ const RegisterForm = () => {
         email,
         password,
         adminCode: adminCode || undefined,
+        inviteToken: inviteToken || undefined,
       });
       router.push('/auth/login');
     } catch {
@@ -70,12 +73,14 @@ const RegisterForm = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <input
-            type="password"
-            placeholder="Admin code (optional)"
-            value={adminCode}
-            onChange={(e) => setAdminCode(e.target.value)}
-          />
+          {!inviteToken && (
+            <input
+              type="password"
+              placeholder="Admin code (optional)"
+              value={adminCode}
+              onChange={(e) => setAdminCode(e.target.value)}
+            />
+          )}
         </div>
         {error && <p className={css['error']}>{error}</p>}
         <button type="submit" disabled={loading}>

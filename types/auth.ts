@@ -8,4 +8,5 @@ export interface RegisterParams {
   email: string;
   password: string;
   adminCode?: string;
+  inviteToken?: string;
 }

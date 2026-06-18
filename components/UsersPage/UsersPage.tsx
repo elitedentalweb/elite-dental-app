@@ -1,16 +1,21 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useUserStore } from '@/store/userStore';
+import { sendInvite } from '@/services/invites';
 import css from './UsersPage.module.css';
 
 const UsersPage = () => {
   const { users, fetchUsers, approveUser, deleteUser, setRole } =
     useUserStore();
 
-  useUserStore();
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [inviteError, setInviteError] = useState('');
+  const [inviteSuccess, setInviteSuccess] = useState('');
+  const [inviteLoading, setInviteLoading] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -34,11 +39,53 @@ const UsersPage = () => {
     }
   };
 
+  const handleInvite = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setInviteError('');
+    setInviteSuccess('');
+    if (!inviteEmail) {
+      setInviteError('Please enter an email');
+      return;
+    }
+    setInviteLoading(true);
+    try {
+      await sendInvite(inviteEmail);
+      setInviteSuccess('Invite sent successfully!');
+      setInviteEmail('');
+    } catch {
+      setInviteError('Failed to send invite');
+    } finally {
+      setInviteLoading(false);
+    }
+  };
+
   const approvedUsers = users.filter((u) => u.isApproved);
 
   return (
     <div className={css['page']}>
       <h1 className={css['title']}>Users</h1>
+
+      <div className={css['addBlock']}>
+        <h2 className={css['sectionTitle']}>Invite User</h2>
+        <form className={css['addForm']} onSubmit={handleInvite}>
+          <input
+            className={css['input']}
+            type="email"
+            placeholder="Enter user email"
+            value={inviteEmail}
+            onChange={(e) => setInviteEmail(e.target.value)}
+          />
+          <button
+            className={css['addButton']}
+            type="submit"
+            disabled={inviteLoading}
+          >
+            {inviteLoading ? 'Sending...' : 'Send Invite'}
+          </button>
+        </form>
+        {inviteError && <p className={css['error']}>{inviteError}</p>}
+        {inviteSuccess && <p className={css['success']}>{inviteSuccess}</p>}
+      </div>
 
       <div className={css['addBlock']}>
         <h2 className={css['sectionTitle']}>Add User</h2>

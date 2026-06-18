@@ -166,3 +166,9 @@
 .deleteButton:hover {
   background: rgba(239, 68, 68, 0.22);
 }
+
+.success {
+  margin: 0;
+  color: #22c55e;
+  font-size: 0.82rem;
+}
