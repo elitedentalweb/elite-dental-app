@@ -42,7 +42,7 @@ const Header = () => {
             </button>
             <nav className={css['nav']}>
               <Link href="/" onClick={() => setIsOpen(false)}>
-                Objects
+                Projects
               </Link>
               {isAdmin && (
                 <Link href="/users" onClick={() => setIsOpen(false)}>
