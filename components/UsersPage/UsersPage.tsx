@@ -8,10 +8,6 @@ const UsersPage = () => {
   const { users, fetchUsers, approveUser, deleteUser, setRole } =
     useUserStore();
 
-  const [email, setEmail] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-
   const [inviteEmail, setInviteEmail] = useState('');
   const [inviteError, setInviteError] = useState('');
   const [inviteSuccess, setInviteSuccess] = useState('');
@@ -20,24 +16,6 @@ const UsersPage = () => {
   useEffect(() => {
     fetchUsers();
   }, []);
-
-  const handleAdd = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    if (!email) {
-      setError('Please enter an email');
-      return;
-    }
-    setLoading(true);
-    try {
-      await approveUser(email);
-      setEmail('');
-    } catch {
-      setError('User not found or already approved');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleInvite = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,8 +36,6 @@ const UsersPage = () => {
       setInviteLoading(false);
     }
   };
-
-  const approvedUsers = users.filter((u) => u.isApproved);
 
   return (
     <div className={css['page']}>
@@ -87,37 +63,30 @@ const UsersPage = () => {
         {inviteSuccess && <p className={css['success']}>{inviteSuccess}</p>}
       </div>
 
-      <div className={css['addBlock']}>
-        <h2 className={css['sectionTitle']}>Add User</h2>
-        <form className={css['addForm']} onSubmit={handleAdd}>
-          <input
-            className={css['input']}
-            type="email"
-            placeholder="Enter user email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <button className={css['addButton']} type="submit" disabled={loading}>
-            {loading ? 'Adding...' : 'Add'}
-          </button>
-        </form>
-        {error && <p className={css['error']}>{error}</p>}
-      </div>
-
       <div className={css['userList']}>
-        <h2 className={css['sectionTitle']}>
-          Active Users ({approvedUsers.length})
-        </h2>
-        {approvedUsers.length === 0 && (
-          <p className={css['empty']}>No users yet</p>
-        )}
-        {approvedUsers.map((user) => (
+        <h2 className={css['sectionTitle']}>All Users ({users.length})</h2>
+        {users.length === 0 && <p className={css['empty']}>No users yet</p>}
+        {users.map((user) => (
           <div key={user._id} className={css['userCard']}>
             <div className={css['userInfo']}>
               <p className={css['userEmail']}>{user.email}</p>
               <p className={css['userNickname']}>{user.nickname}</p>
+              <p
+                className={css['status']}
+                style={{ color: user.isApproved ? '#22c55e' : '#f59e0b' }}
+              >
+                {user.isApproved ? '● Approved' : '● Pending'}
+              </p>
             </div>
             <div className={css['userActions']}>
+              {!user.isApproved && (
+                <button
+                  className={css['approveButton']}
+                  onClick={() => approveUser(user.email)}
+                >
+                  Approve
+                </button>
+              )}
               <select
                 className={css['roleSelect']}
                 value={user.role}
