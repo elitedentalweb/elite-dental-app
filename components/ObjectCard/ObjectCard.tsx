@@ -17,7 +17,10 @@ const priorityConfig = {
 };
 
 const ObjectCard = ({ object, progress }: Props) => {
-  const priority = object.priority ?? 'in_progress';
+  const isCompleted = object.status === 'completed';
+  const priority = isCompleted
+    ? 'completed'
+    : (object.priority ?? 'in_progress');
   const config = priorityConfig[priority];
   const barColor = config.color;
   const statusColor = config.color;

@@ -6,11 +6,12 @@ import { useAuthStore } from '@/store/auth';
 import ObjectCard from '../ObjectCard/ObjectCard';
 import Link from 'next/link';
 import css from './ObjectList.module.css';
-
 const priorityOrder = {
   priority: 0,
   in_progress: 1,
-  on_hold: 2,
+  planned: 2,
+  on_hold: 3,
+  completed: 4,
 };
 
 const ObjectList = () => {
