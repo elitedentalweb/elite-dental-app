@@ -47,9 +47,11 @@ const Header = () => {
               <Link href="/" onClick={() => setIsOpen(false)}>
                 Projects
               </Link>
-              <Link href="/standards" onClick={() => setIsOpen(false)}>
-                Standards
-              </Link>
+              {(isAdmin || user?.role === 'worker') && (
+                <Link href="/standards" onClick={() => setIsOpen(false)}>
+                  Standards
+                </Link>
+              )}
               {isAdmin && (
                 <Link href="/users" onClick={() => setIsOpen(false)}>
                   Users

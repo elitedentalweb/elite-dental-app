@@ -19,6 +19,7 @@ export const metadata: Metadata = {
   description: 'Elite Dental Construction Management',
   manifest: '/manifest.json',
   icons: {
+    icon: '/logowebdva.svg',
     apple: '/image.png',
   },
 };

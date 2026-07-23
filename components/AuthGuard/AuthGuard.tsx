@@ -11,6 +11,8 @@ const publicRoutes = [
   '/auth/forgot-password',
 ];
 
+const standardsRoutes = ['/standards'];
+
 const AuthGuard = ({ children }: { children: React.ReactNode }) => {
   const { user, isAuth, isLoading, checkAuth } = useAuthStore();
   const router = useRouter();
@@ -30,6 +32,15 @@ const AuthGuard = ({ children }: { children: React.ReactNode }) => {
   }
 
   if (!user?.isApproved) return <PendingPage />;
+
+  const isStandardsRoute = standardsRoutes.some((route) =>
+    pathname.startsWith(route)
+  );
+
+  if (isStandardsRoute && user.role !== 'admin' && user.role !== 'worker') {
+    router.push('/');
+    return null;
+  }
 
   return <>{children}</>;
 };
