@@ -1,0 +1,21 @@
+{
+  "name": "Elite Dental",
+  "short_name": "Elite Dental",
+  "description": "Elite Dental Construction Management",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d1017",
+  "theme_color": "#0d1017",
+  "icons": [
+    {
+      "src": "/image.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/image.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
