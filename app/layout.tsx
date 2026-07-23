@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Elite Dental',
+  title: 'Elite Dental Construction',
   description: 'Elite Dental Construction Management',
   manifest: '/manifest.json',
   icons: {

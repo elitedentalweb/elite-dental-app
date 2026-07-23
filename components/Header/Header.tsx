@@ -26,8 +26,11 @@ const Header = () => {
         <button className={css['burger']} onClick={() => setIsOpen(true)}>
           ☰
         </button>
-        <Link href="/">
-          <svg width={136} height={23}>
+        <Link href="/" className={css['logoLink']}>
+          <svg width={136} height={23} className={css['logoMobile']}>
+            <use href="/logo-sprite.svg#icon-header-logo"></use>
+          </svg>
+          <svg width={180} height={30} className={css['logoDesktop']}>
             <use href="/logo-sprite.svg#icon-header-logo"></use>
           </svg>
         </Link>

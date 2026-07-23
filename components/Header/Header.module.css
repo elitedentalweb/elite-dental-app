@@ -10,9 +10,25 @@
   z-index: 50;
 }
 
+.logoLink {
+  display: flex;
+  align-items: center;
+}
+
+.logoMobile {
+  fill: #ffffff;
+  display: block;
+}
+
+.logoDesktop {
+  fill: #ffffff;
+  display: none;
+}
+
 .header svg {
   fill: #ffffff;
 }
+
 .burger {
   background: none;
   border: none;
@@ -106,4 +122,37 @@
 
 .logout:hover {
   background: rgba(239, 68, 68, 0.2);
+}
+
+@media (min-width: 768px) {
+  .header {
+    padding: 20px 32px;
+  }
+
+  .logoMobile {
+    display: none;
+  }
+
+  .logoDesktop {
+    display: block;
+  }
+
+  .burger {
+    font-size: 1.6rem;
+  }
+
+  .placeholder {
+    width: 52px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .header {
+    padding: 22px 48px;
+  }
+
+  .logoDesktop {
+    width: 220px;
+    height: 37px;
+  }
 }
