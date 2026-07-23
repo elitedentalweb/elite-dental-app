@@ -28,13 +28,10 @@ const PhotoGallery = ({ photos }: Props) => {
     e.stopPropagation();
     if (previewIndex === null) return;
     const url = photos[previewIndex];
-    const response = await fetch(url);
-    const blob = await response.blob();
     const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
+    link.href = `/api/download?url=${encodeURIComponent(url)}`;
     link.download = `photo-${previewIndex + 1}.jpg`;
     link.click();
-    URL.revokeObjectURL(link.href);
   };
 
   return (
