@@ -20,53 +20,30 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.92);
+  background: rgba(0, 0, 0, 0.95);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
   z-index: 200;
   cursor: pointer;
-  padding: 16px;
 }
 
 .previewImg {
-  max-width: calc(100vw - 130px);
-  max-height: 80vh;
+  width: 100vw;
+  height: 100vh;
   object-fit: contain;
-  border-radius: 10px;
   cursor: default;
-}
-
-.navBtn {
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-  color: #fff;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: background 0.2s ease;
-  z-index: 201;
-}
-
-.navBtn:hover {
-  background: rgba(255, 255, 255, 0.22);
 }
 
 .closeBtn {
   position: absolute;
   top: 16px;
   right: 16px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.6);
   border: none;
   color: #fff;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
@@ -80,34 +57,15 @@
   background: rgba(255, 255, 255, 0.22);
 }
 
-.counter {
-  position: absolute;
-  bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.82rem;
-  font-weight: 600;
-  background: rgba(0, 0, 0, 0.5);
-  padding: 4px 14px;
-  border-radius: 20px;
-}
-
-.empty {
-  margin: 0;
-  color: #4b5563;
-  font-size: 0.85rem;
-}
-
 .downloadBtn {
   position: absolute;
   top: 16px;
-  right: 60px;
-  background: rgba(255, 255, 255, 0.1);
+  right: 64px;
+  background: rgba(0, 0, 0, 0.6);
   border: none;
   color: #fff;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
@@ -121,29 +79,33 @@
   background: rgba(255, 255, 255, 0.22);
 }
 
+.counter {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 6px 16px;
+  border-radius: 20px;
+}
+
+.empty {
+  margin: 0;
+  color: #4b5563;
+  font-size: 0.85rem;
+}
+
 @media (min-width: 768px) {
   .grid {
     grid-template-columns: repeat(3, 1fr);
-  }
-
-  .navBtn {
-    width: 52px;
-    height: 52px;
-  }
-
-  .previewImg {
-    max-width: calc(100vw - 160px);
-    max-height: 85vh;
   }
 }
 
 @media (min-width: 1200px) {
   .grid {
     grid-template-columns: repeat(4, 1fr);
-  }
-
-  .previewImg {
-    max-width: calc(100vw - 200px);
-    max-height: 90vh;
   }
 }

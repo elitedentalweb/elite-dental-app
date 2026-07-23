@@ -1,6 +1,6 @@
 'use client';
-import { useState } from 'react';
-import { ChevronLeft, ChevronRight, X, Download } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { X, Download } from 'lucide-react';
 import css from './PhotoGallery.module.css';
 
 type Props = {
@@ -9,27 +9,57 @@ type Props = {
 
 const PhotoGallery = ({ photos }: Props) => {
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
+  const touchStartX = useRef<number | null>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (previewIndex === null) return;
+      if (e.key === 'ArrowRight') {
+        setPreviewIndex(
+          previewIndex === photos.length - 1 ? 0 : previewIndex + 1
+        );
+      }
+      if (e.key === 'ArrowLeft') {
+        setPreviewIndex(
+          previewIndex === 0 ? photos.length - 1 : previewIndex - 1
+        );
+      }
+      if (e.key === 'Escape') {
+        setPreviewIndex(null);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [previewIndex, photos.length]);
 
   if (photos.length === 0) return <p className={css['empty']}>No photos yet</p>;
 
-  const handlePrev = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (previewIndex === null) return;
-    setPreviewIndex(previewIndex === 0 ? photos.length - 1 : previewIndex - 1);
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
   };
 
-  const handleNext = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (previewIndex === null) return;
-    setPreviewIndex(previewIndex === photos.length - 1 ? 0 : previewIndex + 1);
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null || previewIndex === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) < 50) return;
+    if (diff > 0) {
+      setPreviewIndex(
+        previewIndex === photos.length - 1 ? 0 : previewIndex + 1
+      );
+    } else {
+      setPreviewIndex(
+        previewIndex === 0 ? photos.length - 1 : previewIndex - 1
+      );
+    }
+    touchStartX.current = null;
   };
 
-  const handleDownload = async (e: React.MouseEvent) => {
+  const handleDownload = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (previewIndex === null) return;
-    const url = photos[previewIndex];
     const link = document.createElement('a');
-    link.href = `/api/download?url=${encodeURIComponent(url)}`;
+    link.href = `/api/download?url=${encodeURIComponent(photos[previewIndex])}`;
     link.download = `photo-${previewIndex + 1}.jpg`;
     link.click();
   };
@@ -49,19 +79,18 @@ const PhotoGallery = ({ photos }: Props) => {
       </div>
 
       {previewIndex !== null && (
-        <div className={css['overlay']} onClick={() => setPreviewIndex(null)}>
-          <button className={css['navBtn']} onClick={handlePrev}>
-            <ChevronLeft size={28} />
-          </button>
+        <div
+          className={css['overlay']}
+          onClick={() => setPreviewIndex(null)}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
           <img
             src={photos[previewIndex]}
             alt="preview"
             className={css['previewImg']}
             onClick={(e) => e.stopPropagation()}
           />
-          <button className={css['navBtn']} onClick={handleNext}>
-            <ChevronRight size={28} />
-          </button>
           <button
             className={css['closeBtn']}
             onClick={() => setPreviewIndex(null)}
