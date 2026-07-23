@@ -21,9 +21,8 @@ const ObjectEditPage = ({ id }: Props) => {
   const [description, setDescription] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const [status, setStatus] = useState<'active' | 'completed'>('active');
   const [priority, setPriority] = useState<
-    'in_progress' | 'priority' | 'on_hold'
+    'in_progress' | 'priority' | 'on_hold' | 'planned' | 'completed'
   >('in_progress');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -40,7 +39,6 @@ const ObjectEditPage = ({ id }: Props) => {
       setClient(currentObject.client);
       setLocation(currentObject.location);
       setDescription(currentObject.description || '');
-      setStatus(currentObject.status);
       setPriority(currentObject.priority ?? 'in_progress');
       setPhotosBefore(currentObject.photosBefore || []);
       setStartDate(
@@ -66,7 +64,6 @@ const ObjectEditPage = ({ id }: Props) => {
         description,
         startDate,
         endDate,
-        status,
         priority,
         photosBefore,
       });
@@ -139,32 +136,26 @@ const ObjectEditPage = ({ id }: Props) => {
           </div>
         </div>
         <div className={css['field']}>
-          <label className={css['label']}>Status</label>
-          <select
-            className={css['input']}
-            value={status}
-            onChange={(e) =>
-              setStatus(e.target.value as 'active' | 'completed')
-            }
-          >
-            <option value="active">In progress</option>
-            <option value="completed">Completed</option>
-          </select>
-        </div>
-        <div className={css['field']}>
           <label className={css['label']}>Priority</label>
           <select
             className={css['input']}
             value={priority}
             onChange={(e) =>
               setPriority(
-                e.target.value as 'in_progress' | 'priority' | 'on_hold'
+                e.target.value as
+                  | 'in_progress'
+                  | 'priority'
+                  | 'on_hold'
+                  | 'planned'
+                  | 'completed'
               )
             }
           >
+            <option value="planned">🟣 Planned</option>
             <option value="in_progress">🔵 In Progress</option>
             <option value="priority">🔴 Priority</option>
             <option value="on_hold">⚫ On Hold</option>
+            <option value="completed">🟢 Completed</option>
           </select>
         </div>
         <div className={css['field']}>

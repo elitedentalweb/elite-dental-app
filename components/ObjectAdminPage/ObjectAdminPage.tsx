@@ -21,9 +21,8 @@ const ObjectAdminPage = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [priority, setPriority] = useState<
-    'in_progress' | 'priority' | 'on_hold'
+    'in_progress' | 'priority' | 'on_hold' | 'planned' | 'completed'
   >('in_progress');
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -121,13 +120,20 @@ const ObjectAdminPage = () => {
             value={priority}
             onChange={(e) =>
               setPriority(
-                e.target.value as 'in_progress' | 'priority' | 'on_hold'
+                e.target.value as
+                  | 'in_progress'
+                  | 'priority'
+                  | 'on_hold'
+                  | 'planned'
+                  | 'completed'
               )
             }
           >
             <option value="in_progress">🔵 In Progress</option>
+            <option value="planned">🟣 Planned</option>
             <option value="priority">🔴 Priority</option>
             <option value="on_hold">⚫ On Hold</option>
+            <option value="completed">🟢 Completed</option>
           </select>
         </div>
 

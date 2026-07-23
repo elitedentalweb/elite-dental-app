@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, Download } from 'lucide-react';
 import css from './PhotoGallery.module.css';
 
 type Props = {
@@ -22,6 +22,19 @@ const PhotoGallery = ({ photos }: Props) => {
     e.stopPropagation();
     if (previewIndex === null) return;
     setPreviewIndex(previewIndex === photos.length - 1 ? 0 : previewIndex + 1);
+  };
+
+  const handleDownload = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (previewIndex === null) return;
+    const url = photos[previewIndex];
+    const response = await fetch(url);
+    const blob = await response.blob();
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `photo-${previewIndex + 1}.jpg`;
+    link.click();
+    URL.revokeObjectURL(link.href);
   };
 
   return (
@@ -57,6 +70,9 @@ const PhotoGallery = ({ photos }: Props) => {
             onClick={() => setPreviewIndex(null)}
           >
             <X size={20} />
+          </button>
+          <button className={css['downloadBtn']} onClick={handleDownload}>
+            <Download size={20} />
           </button>
           <span className={css['counter']}>
             {previewIndex + 1} / {photos.length}

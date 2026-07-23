@@ -9,18 +9,19 @@ type Props = {
 };
 
 const priorityConfig = {
+  planned: { color: '#a855f7', label: '● Planned' },
   in_progress: { color: '#3b82f6', label: '● In Progress' },
   priority: { color: '#ef4444', label: '● Priority' },
   on_hold: { color: '#6b7280', label: '● On Hold' },
+  completed: { color: '#22c55e', label: '● Completed' },
 };
 
 const ObjectCard = ({ object, progress }: Props) => {
-  const isCompleted = object.status === 'completed';
   const priority = object.priority ?? 'in_progress';
   const config = priorityConfig[priority];
-  const barColor = isCompleted ? '#22c55e' : config.color;
-  const statusColor = isCompleted ? '#22c55e' : config.color;
-  const statusLabel = isCompleted ? '● Completed' : config.label;
+  const barColor = config.color;
+  const statusColor = config.color;
+  const statusLabel = config.label;
 
   return (
     <Link href={`/objects/${object._id}`} className={css['objectCard']}>

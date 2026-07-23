@@ -99,6 +99,28 @@
   font-size: 0.85rem;
 }
 
+.downloadBtn {
+  position: absolute;
+  top: 16px;
+  right: 60px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+  z-index: 201;
+}
+
+.downloadBtn:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
 @media (min-width: 768px) {
   .grid {
     grid-template-columns: repeat(3, 1fr);
