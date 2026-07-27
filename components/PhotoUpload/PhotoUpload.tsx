@@ -60,6 +60,10 @@ const PhotoUpload = ({ photos, onChange }: Props) => {
         );
       };
 
+      img.onerror = () => {
+        resolve(file);
+      };
+
       img.src = url;
     });
   };

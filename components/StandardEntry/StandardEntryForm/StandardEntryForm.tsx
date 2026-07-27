@@ -31,6 +31,61 @@ const StandardEntryForm = ({
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const compressImage = (file: File): Promise<File> => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      const url = URL.createObjectURL(file);
+
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+
+        const MAX_SIZE = 1920;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > MAX_SIZE || height > MAX_SIZE) {
+          if (width > height) {
+            height = Math.round((height * MAX_SIZE) / width);
+            width = MAX_SIZE;
+          } else {
+            width = Math.round((width * MAX_SIZE) / height);
+            height = MAX_SIZE;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext('2d')!;
+        ctx.drawImage(img, 0, 0, width, height);
+
+        URL.revokeObjectURL(url);
+
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) {
+              resolve(file);
+              return;
+            }
+            const compressedFile = new File([blob], file.name, {
+              type: 'image/jpeg',
+              lastModified: Date.now(),
+            });
+            resolve(compressedFile);
+          },
+          'image/jpeg',
+          0.85
+        );
+      };
+
+      img.onerror = () => {
+        resolve(file);
+      };
+
+      img.src = url;
+    });
+  };
+
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -46,12 +101,14 @@ const StandardEntryForm = ({
     try {
       const newUrls: string[] = [];
       for (const file of Array.from(files)) {
+        const compressed = await compressImage(file);
+
         const res = await fetch('/api/upload', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            fileName: file.name,
-            fileType: file.type,
+            fileName: compressed.name,
+            fileType: compressed.type,
           }),
         });
 
@@ -59,8 +116,8 @@ const StandardEntryForm = ({
 
         await fetch(presignedUrl, {
           method: 'PUT',
-          body: file,
-          headers: { 'Content-Type': file.type },
+          body: compressed,
+          headers: { 'Content-Type': compressed.type },
         });
 
         newUrls.push(publicUrl);
