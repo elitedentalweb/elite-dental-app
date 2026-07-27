@@ -4,13 +4,13 @@ import { useState } from 'react';
 import { register } from '@/services/auth';
 import Link from 'next/link';
 import css from './RegisterForm.module.css';
+import toast from 'react-hot-toast';
 
 const RegisterForm = () => {
   const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [adminCode, setAdminCode] = useState('');
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -18,11 +18,12 @@ const RegisterForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+
     if (!nickname || !email || !password) {
-      setError('Please fill in all fields');
+      toast.error('Please fill in all fields');
       return;
     }
+
     setLoading(true);
     try {
       await register({
@@ -32,9 +33,15 @@ const RegisterForm = () => {
         adminCode: adminCode || undefined,
         inviteToken: inviteToken || undefined,
       });
+      toast.success('Successfully registered! Please log in.');
       router.push('/auth/login');
-    } catch {
-      setError('Registration failed');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      if (err?.response?.status === 409) {
+        toast.error('This user already exists. Please log in.');
+      } else {
+        toast.error('Registration failed. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -82,7 +89,6 @@ const RegisterForm = () => {
             />
           )}
         </div>
-        {error && <p className={css['error']}>{error}</p>}
         <button type="submit" disabled={loading}>
           {loading ? 'Loading...' : 'Register'}
         </button>

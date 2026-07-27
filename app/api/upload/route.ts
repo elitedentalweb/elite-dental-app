@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 const s3 = new S3Client({
   region: process.env.NEXT_PUBLIC_AWS_REGION!,
@@ -11,33 +12,33 @@ const s3 = new S3Client({
 
 export async function POST(req: NextRequest) {
   try {
-    const formData = await req.formData();
-    const file = formData.get('file') as File;
+    const { fileName, fileType } = await req.json();
 
-    if (!file) {
+    if (!fileName || !fileType) {
       return NextResponse.json(
-        { message: 'No file provided' },
+        { message: 'No file info provided' },
         { status: 400 }
       );
     }
 
-    const fileName = `${Date.now()}-${file.name.replace(/\s/g, '-')}`;
-    const buffer = Buffer.from(await file.arrayBuffer());
+    const key = `${Date.now()}-${fileName.replace(/\s/g, '-')}`;
 
     const command = new PutObjectCommand({
       Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET!,
-      Key: fileName,
-      Body: buffer,
-      ContentType: file.type,
+      Key: key,
+      ContentType: fileType,
     });
 
-    await s3.send(command);
+    const presignedUrl = await getSignedUrl(s3, command, { expiresIn: 300 });
 
-    const url = `https://${process.env.NEXT_PUBLIC_AWS_BUCKET}.s3.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${fileName}`;
+    const publicUrl = `https://${process.env.NEXT_PUBLIC_AWS_BUCKET}.s3.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${key}`;
 
-    return NextResponse.json({ url });
+    return NextResponse.json({ presignedUrl, publicUrl });
   } catch (error) {
     console.log(error);
-    return NextResponse.json({ message: 'Upload failed' }, { status: 500 });
+    return NextResponse.json(
+      { message: 'Failed to get upload URL' },
+      { status: 500 }
+    );
   }
 }

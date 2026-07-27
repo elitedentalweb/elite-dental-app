@@ -60,6 +60,15 @@
   background: rgba(59, 130, 246, 0.06);
 }
 
+.error {
+  color: #ef4444;
+  font-size: 14px;
+  margin-bottom: 8px;
+  padding: 8px 12px;
+  background: #fee2e2;
+  border-radius: 8px;
+}
+
 .addBtn:disabled {
   opacity: 0.5;
   cursor: not-allowed;

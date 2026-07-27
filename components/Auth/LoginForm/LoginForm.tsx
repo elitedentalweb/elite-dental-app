@@ -5,30 +5,39 @@ import { useState } from 'react';
 import { useAuthStore } from '@/store/auth';
 import { login } from '@/services/auth';
 import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { checkAuth } = useAuthStore();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+
     if (!email || !password) {
-      setError('Please fill in all fields');
+      toast.error('Please fill in all fields');
       return;
     }
+
     setLoading(true);
     try {
       await login({ email, password, rememberMe });
       await checkAuth();
+      toast.success('Welcome back!');
       router.push('/');
-    } catch {
-      setError('Invalid email or password');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      if (err?.response?.status === 404) {
+        toast.error('Account not found. Please register.');
+      } else if (err?.response?.status === 401) {
+        toast.error('Invalid email or password.');
+      } else {
+        toast.error('Login failed. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -75,7 +84,6 @@ const LoginForm = () => {
             Forgot password?
           </Link>
         </div>
-        {error && <p className={css['error']}>{error}</p>}
         <button type="submit" disabled={loading}>
           {loading ? 'Loading...' : 'Log in'}
         </button>

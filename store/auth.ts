@@ -35,7 +35,6 @@ export const useAuthStore = create<AuthStore>((set) => ({
   checkAuth: async () => {
     try {
       const data = await me();
-      console.log('ME RESPONSE:', data);
 
       set({ user: data.user, isAuth: true, isLoading: false });
     } catch {

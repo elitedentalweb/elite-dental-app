@@ -34,22 +34,40 @@ const StandardEntryForm = ({
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
+
+    for (const file of Array.from(files)) {
+      if (file.size > 20 * 1024 * 1024) {
+        setError(`Photo "${file.name}" is too large. Maximum size is 20 MB.`);
+        return;
+      }
+    }
+
     setUploading(true);
     try {
       const newUrls: string[] = [];
       for (const file of Array.from(files)) {
-        const formData = new FormData();
-        formData.append('file', file);
-        const response = await fetch('/api/upload', {
+        const res = await fetch('/api/upload', {
           method: 'POST',
-          body: formData,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            fileName: file.name,
+            fileType: file.type,
+          }),
         });
-        const data = await response.json();
-        if (data.url) newUrls.push(data.url);
+
+        const { presignedUrl, publicUrl } = await res.json();
+
+        await fetch(presignedUrl, {
+          method: 'PUT',
+          body: file,
+          headers: { 'Content-Type': file.type },
+        });
+
+        newUrls.push(publicUrl);
       }
       setPhotos((prev) => [...prev, ...newUrls]);
     } catch {
-      setError('Failed to upload photo');
+      setError('Failed to upload photo. Please try again.');
     } finally {
       setUploading(false);
     }
