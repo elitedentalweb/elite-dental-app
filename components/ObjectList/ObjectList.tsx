@@ -43,11 +43,9 @@ const ObjectList = () => {
       <div className={css['header']}>
         <h1 className={css['title']}>Projects</h1>
         <div className={css['headerRight']}>
-          {isAdmin && (
-            <Link href="/objects/completed" className={css['completedButton']}>
-              Completed Projects
-            </Link>
-          )}
+          <Link href="/objects/completed" className={css['completedButton']}>
+            Completed Projects
+          </Link>
           {isAdmin && (
             <Link href="/objects/create" className={css['addButton']}>
               Add Projects
