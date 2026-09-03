@@ -11,7 +11,6 @@ const ObjectAdminPage = () => {
   const startDateRef = useRef<HTMLInputElement>(null);
   const endDateRef = useRef<HTMLInputElement>(null);
   const [photosBefore, setPhotosBefore] = useState<string[]>([]);
-
   const [title, setTitle] = useState('');
   const [client, setClient] = useState('');
   const [location, setLocation] = useState('');
@@ -23,6 +22,12 @@ const ObjectAdminPage = () => {
   const [priority, setPriority] = useState<
     'in_progress' | 'priority' | 'on_hold' | 'planned' | 'completed'
   >('in_progress');
+
+  const fixDate = (dateStr: string) => {
+    const [year, month, day] = dateStr.split('-').map(Number);
+    return new Date(year, month - 1, day).toISOString();
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -37,12 +42,11 @@ const ObjectAdminPage = () => {
         client,
         location,
         description,
-        startDate,
-        endDate,
+        startDate: fixDate(startDate),
+        endDate: fixDate(endDate),
         photosBefore,
         priority,
       });
-
       router.push('/');
     } catch {
       setError('Failed to create object');
@@ -112,22 +116,13 @@ const ObjectAdminPage = () => {
             />
           </div>
         </div>
-
         <div className={css['field']}>
           <label className={css['label']}>Priority</label>
           <select
             className={css['input']}
             value={priority}
-            onChange={(e) =>
-              setPriority(
-                e.target.value as
-                  | 'in_progress'
-                  | 'priority'
-                  | 'on_hold'
-                  | 'planned'
-                  | 'completed'
-              )
-            }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            onChange={(e) => setPriority(e.target.value as any)}
           >
             <option value="in_progress">🔵 In Progress</option>
             <option value="planned">🟣 Planned</option>
@@ -136,12 +131,10 @@ const ObjectAdminPage = () => {
             <option value="completed">🟢 Completed</option>
           </select>
         </div>
-
         <div className={css['field']}>
           <label className={css['label']}>Photos</label>
           <PhotoUpload photos={photosBefore} onChange={setPhotosBefore} />
         </div>
-
         <div className={css['field']}>
           <label className={css['label']}>Description</label>
           <textarea

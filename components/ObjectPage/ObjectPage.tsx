@@ -27,6 +27,15 @@ const ObjectPage = ({ id }: Props) => {
     router.push('/');
   };
 
+  const formatDate = (dateStr: string) => {
+    const d = new Date(dateStr);
+    return new Date(
+      d.getFullYear(),
+      d.getMonth(),
+      d.getDate()
+    ).toLocaleDateString('ru-RU');
+  };
+
   useEffect(() => {
     fetchObjectById(id);
     fetchTasks(id);
@@ -97,10 +106,8 @@ const ObjectPage = ({ id }: Props) => {
         </div>
         <div className={css['metaItem']}>
           <span className={css['metaIcon']}>📅</span>
-          <span className={css['metaValue']}>
-            {new Date(currentObject.startDate).toLocaleDateString('ru-RU')} —{' '}
-            {new Date(currentObject.endDate).toLocaleDateString('ru-RU')}
-          </span>
+          {formatDate(currentObject.startDate)} —{' '}
+          {formatDate(currentObject.endDate)}
         </div>
       </div>
 

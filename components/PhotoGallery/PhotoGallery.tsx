@@ -100,6 +100,30 @@ const PhotoGallery = ({ photos }: Props) => {
           <button className={css['downloadBtn']} onClick={handleDownload}>
             <Download size={20} />
           </button>
+
+          <button
+            className={css['prevBtn']}
+            onClick={(e) => {
+              e.stopPropagation();
+              setPreviewIndex(
+                previewIndex === 0 ? photos.length - 1 : previewIndex - 1
+              );
+            }}
+          >
+            ‹
+          </button>
+          <button
+            className={css['nextBtn']}
+            onClick={(e) => {
+              e.stopPropagation();
+              setPreviewIndex(
+                previewIndex === photos.length - 1 ? 0 : previewIndex + 1
+              );
+            }}
+          >
+            ›
+          </button>
+
           <span className={css['counter']}>
             {previewIndex + 1} / {photos.length}
           </span>

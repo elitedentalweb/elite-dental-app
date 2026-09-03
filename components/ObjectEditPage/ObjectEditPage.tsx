@@ -5,9 +5,7 @@ import { useRouter } from 'next/navigation';
 import css from './ObjectEditPage.module.css';
 import PhotoUpload from '../PhotoUpload/PhotoUpload';
 
-type Props = {
-  id: string;
-};
+type Props = { id: string };
 
 const ObjectEditPage = ({ id }: Props) => {
   const { currentObject, fetchObjectById, updateObject } = useObjectStore();
@@ -27,13 +25,25 @@ const ObjectEditPage = ({ id }: Props) => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const fixDate = (dateStr: string) => {
+    const [year, month, day] = dateStr.split('-').map(Number);
+    return new Date(year, month - 1, day).toISOString();
+  };
+
+  const fixDisplayDate = (dateStr: string) => {
+    const d = new Date(dateStr);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   useEffect(() => {
     fetchObjectById(id);
   }, [id]);
 
   useEffect(() => {
     if (!currentObject) return;
-
     queueMicrotask(() => {
       setTitle(currentObject.title);
       setClient(currentObject.client);
@@ -41,10 +51,8 @@ const ObjectEditPage = ({ id }: Props) => {
       setDescription(currentObject.description || '');
       setPriority(currentObject.priority ?? 'in_progress');
       setPhotosBefore(currentObject.photosBefore || []);
-      setStartDate(
-        new Date(currentObject.startDate).toISOString().split('T')[0]
-      );
-      setEndDate(new Date(currentObject.endDate).toISOString().split('T')[0]);
+      setStartDate(fixDisplayDate(currentObject.startDate));
+      setEndDate(fixDisplayDate(currentObject.endDate));
     });
   }, [currentObject]);
 
@@ -62,8 +70,8 @@ const ObjectEditPage = ({ id }: Props) => {
         client,
         location,
         description,
-        startDate,
-        endDate,
+        startDate: fixDate(startDate),
+        endDate: fixDate(endDate),
         priority,
         photosBefore,
       });
@@ -140,16 +148,8 @@ const ObjectEditPage = ({ id }: Props) => {
           <select
             className={css['input']}
             value={priority}
-            onChange={(e) =>
-              setPriority(
-                e.target.value as
-                  | 'in_progress'
-                  | 'priority'
-                  | 'on_hold'
-                  | 'planned'
-                  | 'completed'
-              )
-            }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            onChange={(e) => setPriority(e.target.value as any)}
           >
             <option value="planned">🟣 Planned</option>
             <option value="in_progress">🔵 In Progress</option>
